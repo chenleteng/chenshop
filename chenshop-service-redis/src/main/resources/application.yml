@@ -1,0 +1,42 @@
+server:
+  port: 8512
+
+dubbox:
+  application:
+    name: chenshop-service-redis
+    organization: dubbox
+    owner: clt
+  registry:
+    protocol: zookeeper
+    address: 192.168.162.128:2181
+  annotation:
+    package: com.clt.chenshop.service.redis
+  protocol:
+    name: dubbo
+    port: 20882
+    timeout: 30000
+    threadpool: fixed
+    threads: 500
+    accepts: 1000
+    serialization: kryo
+    optimizer: com.clt.chenshop.common.serial.SerializationOptimizerImpl
+
+spring:
+  redis:
+    database: 0
+    # 单机使用，对应服务器ip
+    host: 192.168.162.128
+    # 密码，如果没有设置可不配
+    # password:
+    # 单机使用，对应端口号
+    port: 6379
+    # 池配置
+    pool:
+      max-idle: 8
+      min-idle: 0
+      max-active: 8
+      max-wait: -1
+    # HA 环境，上生产时使用
+    # sentinel:
+    # master: mymaster
+    # nodes: 192.168.75.145:32809,192.168.75.145:32810,192.168.75.145:32811

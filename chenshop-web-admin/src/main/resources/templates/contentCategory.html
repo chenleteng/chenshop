@@ -1,0 +1,57 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.d
+td">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>LeeShop 大型分布式电商系统 | 内容分类</title>
+    <th:block th:include="/includes/head :: head"></th:block>
+    <link rel="stylesheet" href="/plugins/treeTable/themes/vsStyle/treeTable.min.css">
+</head>
+<body class="hold-transition skin-blue sidebar-mini">
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box box-info">
+                <div class="box-body table-responsive no-padding">
+                    <table id="treeTable" class="table table-bordered table-hover">
+                        <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>名称</th>
+                            <th>状态</th>
+                            <th>排序</th>
+                            <th>操作</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="category : ${list}" th:attrappend="id=${category.id}" th:attrprepend="pId=${category.parentId}">
+                            <td th:text="${category.id}"></td>
+                            <td th:text="${category.name}"></td>
+                            <td th:switch="${category.status}">
+                                <span th:case="1">正常</span>
+                                <span th:case="2">删除</span>
+                            </td>
+                            <td th:text="${category.sortOrder}"></td>
+                            <td>
+                                <button type="button" class="btn btn-info btn-sm"><i class="fa fa-edit"></i> 编辑</button>
+                                <button type="button" class="btn btn-danger btn-sm"><i class="fa fa- fa-remove"></i> 删除</button>
+                                <button type="button" class="btn btn-primary btn-sm"><i class="fa fa-plus"></i> 添加下级菜单</button>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <!-- /.box-body -->
+            </div>
+            <!-- /.box -->
+        </div>
+    </div>
+</section>
+<th:block th:include="/includes/foot :: foot"></th:block>
+<script src="/plugins/treeTable/jquery.treeTable.min.js"></script>
+<script>
+    $(function () {
+        $("#treeTable").treeTable({expandLevel: 2, column: 1}).show();
+    });
+</script>
+</body>
+</html>

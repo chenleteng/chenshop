@@ -1,0 +1,135 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>首页</title>
+    <th:block th:include="/includes/head"></th:block>
+
+    <link rel="stylesheet" href="/plugins/jquery-scrollbar/jquery.scrollbar.css">
+    <link rel="stylesheet" href="/plugins/nth-tabs/css/nth.tabs.min.css">
+</head>
+
+<body class="hold-transition skin-blue sidebar-mini">
+<div class="wrapper">
+    <header class="main-header">
+        <!-- Logo -->
+        <a href="/frame" class="logo">
+            <!-- mini logo for sidebar mini 50x50 pixels -->
+            <span class="logo-mini"><b>Q</b>F</span>
+            <!-- logo for regular state and mobile devices -->
+            <span class="logo-lg"><b>OA</b></span>
+        </a>
+
+        <!-- Header Navbar: style can be found in header.less -->
+        <nav class="navbar navbar-static-top">
+
+            <!-- Sidebar toggle button-->
+            <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">
+                <span class="sr-only">Toggle navigation</span>
+            </a>
+
+            <div class="navbar-custom-menu">
+                <ul class="nav navbar-nav">
+
+                    <!-- User Account: style can be found in dropdown.less -->
+                    <li class="dropdown user user-menu">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            <img src="/dist/img/user2-160x160.jpg" class="user-image" alt="User Image">
+                            <span class="hidden-xs">Le Teng</span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <!-- User image -->
+                            <li class="user-header">
+                                <img src="/dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
+
+                                <p>
+                                    Le Teng
+                                    <small>2018-3-6</small>
+                                </p>
+                            </li>
+
+                            <!-- Menu Footer-->
+                            <li class="user-footer">
+                                <div class="pull-right">
+                                    <a href="/SSMProject/toLogin" class="btn btn-default btn-flat">注销</a>
+                                </div>
+                        </ul>
+                    </li>
+
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Left side column. contains the logo and sidebar -->
+    <aside class="main-sidebar">
+        <!-- sidebar: style can be found in sidebar.less -->
+        <section class="sidebar">
+            <!-- Sidebar user panel -->
+            <div class="user-panel">
+                <div class="pull-left image">
+                    <img src="/dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
+                </div>
+                <div class="pull-left info">
+                    <p>Le Teng</p>
+                    <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
+                </div>
+            </div>
+
+            <!-- sidebar menu: : style can be found in sidebar.less -->
+            <ul class="sidebar-menu" data-widget="tree">
+                <li class="header">菜单导航</li>
+                <li class="active treeview">
+                    <a href="#">
+                        <i class="fa fa-dashboard"></i> <span>商品管理</span>
+                        <span class="pull-right-container">
+                            <i class="fa fa-angle-left pull-right"></i>
+                        </span>
+                    </a>
+
+                    <ul class="treeview-menu">
+                        <li class="active"><a data-open="false" href="javascript:void(0);" onclick="NthTabs.addTab('a','商品列表','/item/list',true,true)"><i class="fa fa-circle-o"></i> 商品列表</a></li>
+                        <li class="active"><a data-open="false" href="javascript:void(0);" onclick="NthTabs.addTab('b','新增商品','/item/addItem',true,true)"><i class="fa fa-circle-o"></i> 新增商品</a></li>
+                    </ul>
+                </li>
+                <li class="treeview">
+                    <a href="#">
+                        <i class="fa fa-dashboard"></i> <span>内容管理</span>
+                        <span class="pull-right-container">
+                            <i class="fa fa-angle-left pull-right"></i>
+                        </span>
+                    </a>
+
+                    <ul class="treeview-menu">
+                        <li class="active"><a data-open="false" href="javascript:void(0);" onclick="NthTabs.addTab('c','内容分类','/content/category/list',true,true)"><i class="fa fa-circle-o"></i> 内容分类</a></li>
+                        <li class="active"><a data-open="false" href="javascript:void(0);" onclick="NthTabs.addTab('d','内容列表','/content/list',true,true)"><i class="fa fa-circle-o"></i> 内容列表</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </section>
+    </aside>
+
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper" style="background: #FFF;">
+        <div class="nth-tabs common-bg" id="editor-tabs"></div>
+    </div>
+
+    <!-- /.content-wrapper -->
+    <footer class="main-footer">
+        <div class="pull-right hidden-xs">
+            <b>Version</b> 2.4.0
+        </div>
+        <strong>Copyright &copy; 2017-2018 <a href="https://www.leteng。cn">Duff</a>.</strong> All rights reserved.
+    </footer>
+
+</div>
+<th:block th:include="/includes/foot"></th:block>
+<script src="/plugins/jquery-scrollbar/jquery.scrollbar.min.js"></script>
+<script src="/plugins/nth-tabs/js/nth.tabs.min.js"></script>
+<script src="/plugins/nth-tabs.js"></script>
+<script>
+    $(function () {
+        NthTabs.home("/home");
+    });
+</script>
+</body>
+</html>

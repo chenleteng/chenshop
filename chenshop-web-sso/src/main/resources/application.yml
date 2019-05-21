@@ -1,0 +1,20 @@
+server:
+  port: 8103
+
+spring:
+  thymeleaf:
+    cache: false # 开发时关闭缓存,不然没法看到实时页面
+    mode: LEGACYHTML5 # 用非严格的 HTML
+    encoding: UTF-8
+    content-type: text/html
+
+dubbox:
+  application:
+    name: chenshop-web-sso
+    organization: dubbox
+    owner: clt
+  registry:
+    protocol: zookeeper
+    address: 192.168.162.128:2181
+  annotation:
+    package: com.clt.chenshop.web.sso.controller

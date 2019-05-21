@@ -1,0 +1,154 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.d
+td">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title >LeeShop 大型分布式电商系统 | 内容列表</title>
+    <th:block th:include="/includes/head :: head"></th:block>
+    <link rel="stylesheet" href="/plugins/jquery-ztree/css/zTreeStyle/zTreeStyle.min.css">
+    <link rel="stylesheet" href="/bower_components/datatables.net-bs/css/dataTables.bootstrap.css">
+</head>
+<body class="hold-transition skin-blue sidebar-mini">
+
+<th:block th:if="${result != null}">
+    <div class="alert alert-danger alert-dismissible" th:classappend="${result.status == 200 ? 'alert-success':'alert-danger'}">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+        <span th:text="${result.msg}">
+    </div>
+</th:block>
+
+<section class="content">
+    <div class="row">
+        <div class="col-md-2">
+            <div class="box box-info">
+                <div class="box-body">
+                    <ul id="tree" class="ztree"></ul>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-10">
+            <div class="box box-info">
+                <div class="box-header">
+                    <a href="/content/from" type="button" class="btn btn-default btn-sm"><i class="fa fa-plus"></i> 添加</a>
+                </div>
+                <div class="box-body">
+                    <table id="contentTable" class="table table-bordered table-hover">
+                        <thead>
+                            <th>ID</th>
+                            <th>标题</th>
+                            <th>子标题</th>
+                            <th>标题描述</th>
+                            <th>链接</th>
+                            <th>图片</th>
+                            <th>图片2</th>
+                            <th>创建时间</th>
+                            <th>更新时间</th>
+                            <th>操作</th>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<th:block th:include="/includes/foot :: foot"></th:block>
+<script src="/plugins/jquery-ztree/js/jquery.ztree.core-3.5.min.js"></script>
+<script src="/bower_components/datatables.net/js/jquery.dataTables.js"></script>
+<script src="/bower_components/datatables.net-bs/js/dataTables.bootstrap.js"></script>
+<script src="/plugins/custom.js"></script>
+<script>
+    $(function () {
+        showContent();
+        showDataTable();
+    })
+
+    function showContent() {
+        var setting = {
+            view:{
+                selectedMulti:false
+            },
+            async:{
+                enable:true,
+                url:"/content/category/tree",
+                autoParam:["id"]
+            },
+            callback:{
+                beforeClick: beforeClick,
+            }
+        };
+        $.fn.zTree.init($("#tree"), setting);
+
+        function beforeClick(treeId, treeNode) {
+            var contentTable = $('#contentTable').DataTable();
+            contentTable.ajax.url( "/content/getTableData?categoryId=" + treeNode.id ).load();
+        }
+    }
+
+    function showDataTable() {
+        $('#contentTable').DataTable({
+            "bPaginate": false, // 分页工具条显示
+            "bScrollCollapse": true, // 当显示的数据不足以支撑表格的默认的高度
+            "bLengthChange": false, // 每页显示的记录数
+            "bFilter": false, // 搜索栏
+            "bSort": false, // 是否支持排序功能
+            "bInfo": false, // 显示表格信息
+            "bAutoWidth": true, // 自适应宽度
+            "bJQueryUI": false,// 是否开启主题
+            "bDestroy": true,
+            "bProcessing": true, // 开启读取服务器数据时显示正在加载中……特别是大数据量的时候，开启此功能比较好
+            "bServerSide": false,// 服务器处理分页，默认是false，需要服务器处理，必须true
+            "sAjaxDataProp": "aData", // 是服务器分页的标志，必须有
+            "sAjaxSource": "/content/getTableData?categoryId=0", // 通过ajax实现分页的url路径。
+            "aoColumns": [ // 初始化要显示的列
+                {
+                    "mDataProp": "id", // 获取列数据，跟服务器返回字段一致
+                    "sClass": "center" // 显示样式
+                }, {
+                    "mDataProp": "title"
+                }, {
+                    "mDataProp": "subTitle"
+                }, {
+                    "mDataProp": "titleDesc",
+                }, {
+                    "mDataProp": "url",
+                    "mRender": function (data, type, full) {
+                        return "<a href='"+data+"' target='_blank'>查看</a>";
+                    }
+                }, {
+                    "mDataProp": "pic",
+                    "mRender": function (data, type, full) {
+                        return "<a href='"+data+"' target='_blank'>查看</a>";
+                    }
+                }, {
+                    "mDataProp": "pic2",
+                    "mRender": function (data, type, full) {
+                        return "<a href='"+data+"' target='_blank'>查看</a>";
+                    }
+                },{
+                    "mDataProp": "created",
+                    "mRender": function (data, type, full) {
+                        return Custom.formatDateTime(data);
+                    }
+                } ,{
+                    "mDataProp": "updated",
+                    "mRender": function (data, type, full) {
+                        return Custom.formatDateTime(data);
+                    }
+                },{
+                    "mDataProp": "id",
+                        "mRender": function (data, type, full) {
+                        var opt = "";
+                        opt += '<a href="/content/from?id='+ data +'" type="button" class="btn btn-info btn-sm"><i class="fa fa-edit"></i> 编辑</a>&nbsp;&nbsp;';
+                        opt += '<a type="button" class="btn btn-danger btn-sm"><i class="fa fa-remove"></i> 删除</a>&nbsp;&nbsp;';
+                        return opt;
+                    }
+                }],
+            "oLanguage": { // 汉化
+                "sUrl": "/bower_components/datatables.net-bs/language.json"
+            }
+        });
+    }
+</script>
+</body>
+</html>

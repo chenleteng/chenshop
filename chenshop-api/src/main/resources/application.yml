@@ -1,0 +1,15 @@
+server:
+  port: 9000
+
+dubbox:
+  application:
+    name: chenshop-api
+    organization: dubbox
+    owner: clt
+  registry:
+    protocol: zookeeper
+    address: 192.168.162.128:2181
+  annotation:
+    package: com.clt.chenshop.api.controller
+
+api.path.v1: api/v1

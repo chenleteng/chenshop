@@ -1,0 +1,194 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>新增商品</title>
+    <th:block th:include="/includes/head"></th:block>
+    <link rel="stylesheet" href="/plugins/jquery-ztree/css/zTreeStyle/zTreeStyle.min.css">
+    <link rel="stylesheet" href="/plugins/wangeditor/css/wangEditor.css">
+    <link rel="stylesheet" href="/plugins/bootstrap-fileinput/css/fileinput.min.css">
+</head>
+<body>
+
+<th:block th:if="${result != null}">
+    <div class="alert alert-danger alert-dismissible" th:classappend="${result.status == 20002 ? 'alert-danger':'alert-success'}">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+        <span th:text="${result.msg}">
+    </div>
+</th:block>
+
+<form class="form-horizontal" action="/item/save" method="post">
+    <div class="box-body">
+        <div class="form-group">
+            <label for="input_item_cat" class="col-sm-2 control-label">商品分类</label>
+
+            <div class="col-sm-10">
+                <input type="text" class="form-control" id="input_item_cat" placeholder="商品分类" readonly = "readonly">
+                <input type="hidden" class="form-control" id="input_item_cat_id" name=" ">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="input_item_title" class="col-sm-2 control-label">商品标题</label>
+
+            <div class="col-sm-10">
+                <input type="text" class="form-control" id="input_item_title" name="title" placeholder="商品标题">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="input_item_sell_point" class="col-sm-2 control-label">商品卖点</label>
+
+            <div class="col-sm-10">
+                <input type="text" class="form-control" id="input_item_sell_point" name="sellPoint" placeholder="商品卖点">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="input_item_price" class="col-sm-2 control-label">商品价格</label>
+
+            <div class="col-sm-10">
+                <input type="text" class="form-control" id="input_item_price" name="price" placeholder="商品价格">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="input_item_num" class="col-sm-2 control-label">库存数量</label>
+
+            <div class="col-sm-10">
+                <input type="text" class="form-control" id="input_item_num" name="num" placeholder="库存数量">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="input_item_barcode" class="col-sm-2 control-label">条形码</label>
+
+            <div class="col-sm-10">
+                <input type="text" class="form-control" id="input_item_barcode" name="barcode" placeholder="条形码">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="input_item_image" class="col-sm-2 control-label">图片</label>
+
+            <div class="col-sm-10">
+                <div class="input-group" style="width: 100%;">
+                    <input id="input_item_image" name="uploadFile" type="file" multiple="multiple" class="file-loading" accept="image/*"></input>
+                    <input id="fileurl" type="hidden" name="image" value=""></input>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="input_item_desc" class="col-sm-2 control-label">商品描述</label>
+
+            <div class="col-sm-10">
+                <textarea id="text1" style="width: 100%;height: 200px"></textarea>
+                <input type="text" class="form-control" id="input_item_desc" name="itemDesc" placeholder="商品描述">
+            </div>
+        </div>
+
+    <!-- /.box-body -->
+    <div class="box-footer">
+        <button type="submit" class="btn btn-info pull-right">提交</button>
+    </div>
+    <!-- /.box-footer -->
+
+    <div class="modal fade" id="modal-default">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">选择分类</h4>
+                </div>
+                <div class="modal-body">
+                    <ul id="tree" class="ztree" style="width:260px; overflow:auto;"></ul>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default pull-left" data-dismiss="modal">取消</button>
+                    <button id="btn_choice" type="button" class="btn btn-primary">选择</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <!-- /.modal -->
+</form>
+</div>
+</div>
+<th:block th:include="/includes/foot"></th:block>
+<script src="/plugins/jquery-ztree/js/jquery.ztree.core-3.5.min.js"></script>
+<script src="/plugins/wangeditor/js/wangEditor.js"></script>
+<script src="/plugins/bootstrap-fileinput/js/fileinput.min.js"></script>
+<script src="/plugins/bootstrap-fileinput/js/zh.js"></script>
+<script>
+    $(function () {
+        //绑定商品分类的点击事件
+        $("#input_item_cat").bind("click",function () {
+            $("#modal-default").modal("show");
+        });
+
+        $("#btn_choice").bind("click",function () {
+            var  zTree = $.fn.zTree.getZTreeObj("tree");
+            var node = zTree.getSelectedNodes()[0];
+            $("#input_item_cat_id").val(node.id);
+            $("#input_item_cat").val(node.name);
+            $("#modal-default").modal("hide");
+        });
+
+        showCatList();
+
+        showEditor();
+
+        initFileInput();
+
+    })
+
+    function showCatList() {
+        var setting = {
+            view:{
+                selectedMulti:false
+            },
+            async:{
+                enable:true,
+                url:"/itemCat/list",
+                autoParam:["id"]
+            }
+        };
+
+        $.fn.zTree.init($("#tree"), setting);
+    }
+
+    function showEditor() {
+        var editor = new wangEditor('text1');
+        editor.create();
+    }
+
+    function initFileInput() {
+        var control = $("#input_item_image");
+        var imgArray = [];
+        control.fileinput({
+            language: 'zh', // 设置语言
+            uploadUrl: "/upload", // 上传的地址
+            allowedFileExtensions: ['jpg', 'png', 'gif'], // 接收的文件后缀
+            maxFileCount: 10,
+            enctype: 'multipart/form-data',
+            showUpload: true, // 是否显示上传按钮
+            showCaption: false, // 是否显示标题
+            browseClass: "btn btn-primary", // 按钮样式
+            previewFileIcon: "<i class='glyphicon glyphicon-king'></i>",
+            msgFilesTooMany: "选择上传的文件数量({n}) 超过允许的最大数值{m}！"
+        }).on("fileuploaded", function (event, outData) {
+            // 文件上传成功后返回的数据
+                var result = outData.response.url;
+                imgArray.push(result);
+                $("#fileurl").val(imgArray.join(","));
+                alert(result);
+            });
+        }
+
+</script>
+</body>
+</html>
